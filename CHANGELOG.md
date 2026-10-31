@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 — 2026-10-31
+
+- Extract the download and open `SnipR.exe`; no manual FFmpeg installation script is needed.
+- First recording automatically downloads FFmpeg with progress, SHA256 verification, cancellation and retry.
+- Components are installed in the current user's local application data folder; no administrator access is required. Subsequent recordings reuse the installation offline.
+- Existing `tools/ffmpeg.exe` installations continue to work.
+- Public archives still include the .NET runtime and obtain FFmpeg separately from its publisher.
+
 ## 0.1.0 — 2026-10-31
 
 First public preview release.

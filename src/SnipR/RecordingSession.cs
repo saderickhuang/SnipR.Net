@@ -22,11 +22,12 @@ internal sealed class RecordingSession : IAsyncDisposable
     public bool HasExited => process?.HasExited == true;
     public Exception? AudioFailure => tracks.Select(x => x.Failure).FirstOrDefault(x => x != null);
     public string RecoveryFolder => workingFolder;
-    public static string EncoderPath => Path.Combine(AppContext.BaseDirectory, "tools", "ffmpeg.exe");
+    public static string EncoderPath => EncoderInstaller.Default.FindInstalled()
+        ?? throw new FileNotFoundException("录像组件尚未准备好，请从主界面开始录制以自动下载。");
 
     public async Task StartAsync(Rectangle region, Settings settings)
     {
-        if (!File.Exists(EncoderPath)) throw new FileNotFoundException("缺少录像组件。请运行 scripts/setup-ffmpeg.ps1 后重新构建。", EncoderPath);
+        _ = EncoderPath;
         if (region.Width < 16 || region.Height < 16 || (region.Width & 1) != 0 || (region.Height & 1) != 0)
             throw new ArgumentException("录制区域必须至少为 16 × 16，且宽高为偶数。");
         Directory.CreateDirectory(settings.OutputFolder);

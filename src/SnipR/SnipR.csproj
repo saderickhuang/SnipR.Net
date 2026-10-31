@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>SnipR</AssemblyName>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <IncludeFfmpeg Condition="'$(IncludeFfmpeg)' == ''">true</IncludeFfmpeg>
   </PropertyGroup>
   <ItemGroup>

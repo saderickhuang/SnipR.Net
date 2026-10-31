@@ -1,4 +1,4 @@
-# Run this script from the extracted portable release before starting SnipR.
+# Legacy manual installer for v0.1.0 portable releases. SnipR v0.1.1+ installs automatically.
 $ErrorActionPreference = 'Stop'
 $toolsDir = Join-Path $PSScriptRoot 'tools'
 $cacheDir = Join-Path $PSScriptRoot '.downloads'

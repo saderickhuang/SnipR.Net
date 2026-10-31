@@ -11,7 +11,6 @@ dotnet publish $project -c Release -r win-x64 --self-contained true -p:IncludeFf
 if ($LASTEXITCODE -ne 0) { throw 'Publish failed.' }
 if (Test-Path (Join-Path $stage 'tools/ffmpeg.exe')) { throw 'FFmpeg must not be in the public release archive.' }
 Copy-Item (Join-Path $projectRoot 'LICENSE'), (Join-Path $projectRoot 'README.md'), (Join-Path $projectRoot 'THIRD-PARTY-NOTICES.md'), (Join-Path $projectRoot 'CONTRIBUTING.md'), (Join-Path $projectRoot 'CHANGELOG.md') $stage
-Copy-Item (Join-Path $PSScriptRoot 'Install-FFmpeg.ps1') $stage
 $licenseDir = Join-Path $stage 'licenses'
 New-Item -ItemType Directory -Force $licenseDir | Out-Null
 $nugetRoot = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $env:USERPROFILE '.nuget/packages' }

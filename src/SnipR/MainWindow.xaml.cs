@@ -9,11 +9,12 @@ namespace SnipR;
 
 public partial class MainWindow : Window
 {
-    private enum Stage { Idle, Selecting, Countdown, Starting, Recording, Saving }
+    private enum Stage { Idle, Preparing, Selecting, Countdown, Starting, Recording, Saving }
     private Stage stage;
     private readonly Settings settings = Settings.Load();
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(250) };
     private RecordingSession? session;
+    private EncoderSetupWindow? encoderSetup;
     private SelectionWindow? selector;
     private RecordingBar? bar;
     private RecordingBorderWindow? recordingBorder;
@@ -96,7 +97,7 @@ public partial class MainWindow : Window
     private async Task BeginAsync(bool? pickWindow = null)
     {
         if (stage != Stage.Idle) return;
-        stage = Stage.Selecting;
+        stage = Stage.Preparing;
         cancelRequested = false;
         RecordButton.IsEnabled = false;
         WindowRecordButton.IsEnabled = false;
@@ -104,7 +105,14 @@ public partial class MainWindow : Window
         {
             if (pickWindow.HasValue) settings.PreferWindowSelection = pickWindow.Value;
             ReadSettings();
-            if (!File.Exists(RecordingSession.EncoderPath)) throw new FileNotFoundException("缺少 FFmpeg 录像组件。请先运行 scripts/setup-ffmpeg.ps1，然后重新构建。 ");
+            if (EncoderInstaller.Default.FindInstalled() == null)
+            {
+                encoderSetup = new EncoderSetupWindow { Owner = this };
+                var ready = encoderSetup.ShowDialog() == true;
+                encoderSetup = null;
+                if (!ready || cancelRequested) { Restore(); return; }
+            }
+            stage = Stage.Selecting;
             Hide();
             await Task.Delay(180);
             selector = new SelectionWindow(settings.PreferWindowSelection, settings.IncludeWindowFrame);
@@ -146,6 +154,7 @@ public partial class MainWindow : Window
 
     private async Task StopAsync()
     {
+        if (stage == Stage.Preparing) { cancelRequested = true; encoderSetup?.Cancel(); return; }
         if (stage == Stage.Selecting) { cancelRequested = true; selector?.Cancel(); return; }
         if (stage is Stage.Countdown or Stage.Starting) { cancelRequested = true; bar?.Update("正在取消…", "请稍候", "取消", false); return; }
         if (stage != Stage.Recording || session == null) return;

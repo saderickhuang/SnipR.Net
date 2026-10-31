@@ -2,19 +2,17 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-开源 Windows 区域录屏工具，采用 MIT 许可证。当前为 **v0.1.0 预览版**。
+开源 Windows 区域录屏工具，采用 MIT 许可证。当前为 **v0.1.1 预览版**。
 
 基于 **C# / .NET 10 / WPF** 的 Windows 区域录屏工具。主界面、透明框选层、悬浮控制条均为 WPF；通过 NAudio / WASAPI 采集声音，使用独立 FFmpeg 进程进行 H.264 编码与 MP4 封装。
 
 ## 直接运行
 
-从 [Releases](https://github.com/saderickhuang/SnipR.Net/releases) 下载 `SnipR-0.1.0-win-x64.zip` 并解压，运行附带的 `Install-FFmpeg.ps1`，完成后打开 `SnipR.exe`。
+从 [Releases](https://github.com/saderickhuang/SnipR.Net/releases/tag/v0.1.1) 下载 `SnipR-0.1.1-win-x64.zip`，解压后直接双击 **SnipR.exe**。不需要运行脚本、安装 .NET 或使用管理员权限。
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\Install-FFmpeg.ps1
-```
+首次点击录制时，软件自动从 Gyan 下载 FFmpeg，显示进度并校验 SHA256，准备好后继续框选。下载可取消，失败可重试。**首次准备需要联网**，之后可离线录制，更新或移动 SnipR 也无需重复下载。
 
-公开发布包包含 .NET 运行时，无需安装 SDK；FFmpeg 由安装脚本从发布方单独下载并校验 SHA256。也可自行将支持 `gdigrab`、`libx264` 和 AAC 的 `ffmpeg.exe` 放到 `SnipR.exe` 同级的 `tools` 文件夹。移动软件时请移动整个目录。
+组件及其许可证保存在 `%LOCALAPPDATA%/SnipR/components/ffmpeg`。公开 ZIP 包含 .NET 运行时，不包含 FFmpeg。离线部署时，也可自行将支持 `gdigrab`、`libx264` 和 AAC 的 `ffmpeg.exe` 放到 `SnipR.exe` 同级的 `tools` 文件夹。移动软件时请移动整个解压目录。
 
 支持 Windows 10 22H2 / Windows 11 x64，当前在 Windows 11、150% 显示缩放下实测。
 
@@ -36,12 +34,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Install-FFmpeg.ps1
 要求 Windows 与 .NET 10 SDK，无需 Visual Studio。
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-ffmpeg.ps1
 dotnet build SnipR.slnx -c Release
 dotnet run --project src/SnipR/SnipR.csproj
 ```
 
-`setup-ffmpeg.ps1` 从 Gyan 下载 Windows essentials 构建，对照发布方 SHA256 校验后，仅提取所需文件。下载缓存位于 `.downloads`，组件位于 `tools/ffmpeg`。NuGet 依赖固定为 NAudio 2.2.1。
+运行源码构建也支持自动准备 FFmpeg。开发者需要本地打包或运行录像验证脚本时，可选执行 `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup-ffmpeg.ps1`，下载 FFmpeg / ffprobe 到 `tools/ffmpeg`。NuGet 依赖固定为 NAudio 2.2.1。
 
 生成包含运行时的发布目录：
 
@@ -68,6 +65,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-release.ps1
 | `RecordingBorderWindow.cs` | 录制范围边框、鼠标穿透、焦点保持与捕获排除 |
 | `RecordingSession.cs` | 编码进程、录制生命周期、音视频合并与恢复文件 |
 | `EncoderJob.cs` | Windows Job Object，应用退出时终止所属编码进程 |
+| `EncoderInstaller.cs` / `EncoderSetupWindow.xaml` | 首次录制时自动下载、校验、安装组件，支持取消与重试 |
 | `AudioTrack.cs` | WASAPI 系统回环 / 麦克风采集、补齐静音与设备异常检测 |
 | `Settings.cs` | `%LOCALAPPDATA%/SnipR/settings.json` 设置持久化 |
 | `Native.cs` | 快捷键、窗口位置、捕获排除、虚拟桌面边界 |
@@ -89,6 +87,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-release.ps1
 ## 验证
 
 ```powershell
+# 无需网络或音频设备的组件准备测试
+dotnet run --project tests/SnipR.SetupChecks -c Release
+# 以下实录检查需先运行 scripts/setup-ffmpeg.ps1 准备开发用 FFmpeg / ffprobe
 scripts/verify.ps1
 # 增加系统声音和麦克风测试；将实际打开默认音频设备并播放短测试音
 scripts/verify.ps1 -WithAudio
