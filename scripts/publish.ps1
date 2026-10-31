@@ -4,3 +4,5 @@ if (-not (Test-Path (Join-Path $projectRoot 'tools/ffmpeg/ffmpeg.exe'))) { & (Jo
 dotnet publish (Join-Path $projectRoot 'src/SnipR/SnipR.csproj') -c Release -r win-x64 --self-contained true -o (Join-Path $projectRoot 'artifacts/SnipR-win-x64')
 if ($LASTEXITCODE -ne 0) { throw 'Publish failed.' }
 Copy-Item (Join-Path $projectRoot 'README.md'), (Join-Path $projectRoot 'THIRD-PARTY-NOTICES.md'), (Join-Path $projectRoot 'VALIDATION.md') (Join-Path $projectRoot 'artifacts/SnipR-win-x64')
+$docsDir = New-Item -ItemType Directory -Force (Join-Path $projectRoot 'artifacts/SnipR-win-x64/docs')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/assets') -Destination $docsDir.FullName -Recurse -Force

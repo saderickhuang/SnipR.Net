@@ -1,10 +1,51 @@
-# SnipR
+<p align="center">
+  <img src="docs/assets/snipr-logo.png" alt="SnipR Logo：薄荷绿选区与珊瑚红录制圆点" width="144" />
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<h1 align="center">SnipR</h1>
 
-开源 Windows 区域录屏工具，采用 MIT 许可证。当前为 **v0.1.1 预览版**。
+<p align="center">框选屏幕，录下需要的部分。</p>
 
-基于 **C# / .NET 10 / WPF** 的 Windows 区域录屏工具。主界面、透明框选层、悬浮控制条均为 WPF；通过 NAudio / WASAPI 采集声音，使用独立 FFmpeg 进程进行 H.264 编码与 MP4 封装。
+<p align="center">
+  <a href="https://github.com/saderickhuang/SnipR.Net/releases"><img src="https://img.shields.io/github/v/release/saderickhuang/SnipR.Net?include_prereleases&amp;style=flat-square&amp;label=release&amp;color=83D9AA" alt="GitHub 最新版本（含预览版）" /></a>
+  <a href="#直接运行"><img src="https://img.shields.io/badge/Windows-10%20%7C%2011%20x64-0078D4?style=flat-square" alt="Windows 10 / 11 x64" /></a>
+  <a href="src/SnipR/SnipR.csproj"><img src="https://img.shields.io/badge/.NET-10-512BD4?style=flat-square" alt=".NET 10" /></a>
+  <a href="src/SnipR/MainWindow.xaml"><img src="https://img.shields.io/badge/UI-WPF-5C2D91?style=flat-square" alt="WPF UI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-83D9AA?style=flat-square" alt="MIT License" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/saderickhuang/SnipR.Net/releases">下载预览版</a> ·
+  <a href="#直接运行">使用说明</a> ·
+  <a href="https://github.com/saderickhuang/SnipR.Net/issues">反馈问题</a>
+</p>
+
+SnipR 是基于 **C# / .NET 10 / WPF** 的开源 Windows 区域录屏工具，采用 MIT 许可证。支持自由框选、窗口内容选择、系统声音与麦克风同时录制，导出 H.264 / AAC MP4。当前为 **v0.1.1 预览版**。
+
+## 界面预览
+
+主界面保留录制入口与状态，录制设置默认折叠。
+
+<p align="center">
+  <img src="docs/assets/main-window.png" alt="SnipR 主界面：框选录制、选择窗口与折叠的录制设置" width="540" />
+</p>
+
+<details>
+<summary>展开查看声音、帧率与保存位置设置</summary>
+
+<p align="center">
+  <img src="docs/assets/recording-settings.png" alt="录制设置：系统声音、麦克风、鼠标指针、标题栏、帧率与保存位置" width="540" />
+</p>
+
+</details>
+
+录制时通过悬浮控制条查看时长、停止并保存。
+
+<p align="center">
+  <img src="docs/assets/recording-toolbar.png" alt="录制控制条：计时、停止按钮与 Ctrl + Shift + S 快捷键" width="378" />
+</p>
+
+<sub>以上图片由实际 WPF 控件渲染；保存路径与计时为演示值。</sub>
 
 ## 直接运行
 
