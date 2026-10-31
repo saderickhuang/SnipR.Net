@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+.vs/
+tools/ffmpeg/
+.downloads/
+artifacts/
+*.user
+*.suo
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+.sessions/
+*.mp4
+*.wav

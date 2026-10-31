@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>SnipR</AssemblyName>
+    <Version>0.1.0</Version>
+    <IncludeFfmpeg Condition="'$(IncludeFfmpeg)' == ''">true</IncludeFfmpeg>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <Content Include="../../tools/ffmpeg/ffmpeg.exe" Link="tools/ffmpeg.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(IncludeFfmpeg)' == 'true' And Exists('../../tools/ffmpeg/ffmpeg.exe')" />
+    <Content Include="../../tools/ffmpeg/LICENSE" Link="tools/FFmpeg-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(IncludeFfmpeg)' == 'true' And Exists('../../tools/ffmpeg/LICENSE')" />
+  </ItemGroup>
+</Project>
